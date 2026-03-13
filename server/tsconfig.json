@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "module": "nodenext",
+    "target": "esnext",
+    "moduleResolution": "nodenext",
+    
+    // 1. Tell TS where your code is
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    // 2. Fix the "process" and "mongoose" errors
+    "lib": ["esnext"],
+    "types": ["node"], 
+
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    // Stricter Typechecking
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    // Recommended Options
+    "strict": true,
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "moduleDetection": "force"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}

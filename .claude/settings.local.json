@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /c/Users/Devang/Desktop/buckhorn/Colour-Changing/url-shortener-demo-app/server -type f -name \"*.ts\" 2>/dev/null | head -20)"
+    ]
+  }
+}
