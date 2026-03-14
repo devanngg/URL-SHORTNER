@@ -1,7 +1,8 @@
 import Fastify from "fastify"
 import fastifyCors from "@fastify/cors"
+import fastifyRateLimit from "@fastify/rate-limit"
 import type {FastifyInstance} from "fastify"
-import {connectToMongoDB} from "./config/moongose.js"
+import {connectToMongoDB} from "./config/mongoose.js"
 import {connectToRedis} from "./config/redis.js"
 import {connectToZookeeper} from "./config/zookeeper.js"
 import {urlRoutes} from "./routes/urls.js"
@@ -11,13 +12,20 @@ import {urlRoutes} from "./routes/urls.js"
 const fastify = Fastify();
 // configure server
 fastify
-.register(fastifyCors)
-.register(
+.register(fastifyCors,{
+    origin:process.env.CLIENT_ORIGIN || "http:localhost:5173",
+    methods:["GET","POST","PUT","DELETE"]
+});
+fastify.register(
     async (fastify:FastifyInstance)=>{
         fastify.register(urlRoutes);
     },
     {prefix:'/api'}
 );
+fastify.register(fastifyRateLimit,{
+    max:100,
+    timeWindow:'1 minutes'
+});
 
 const start = async ()=>{
     try {

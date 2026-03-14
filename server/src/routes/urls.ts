@@ -1,5 +1,5 @@
 import type {FastifyInstance} from "fastify"
-import {postUrl,getUrl,getUrls} from "../controllers/urlController.js"
+import {postUrl,getUrl,getUrls,getUrlStats} from "../controllers/urlController.js"
 
 
 export const urlRoutes  = async (Fastify :FastifyInstance)=>{
@@ -11,7 +11,7 @@ async (router:FastifyInstance)=>{
     router.get("/:shortenUrlKey",getUrl)
     // create a new shortned url 
     router.post("/",postUrl)
-
+router.get("/stats/:shortenUrlKey", getUrlStats)
 },
 {prefix:'/urls'}
     )
