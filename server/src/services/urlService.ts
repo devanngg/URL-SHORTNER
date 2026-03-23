@@ -3,14 +3,14 @@ import {get,set,ExtendTTL,RedisExpirationMode} from "../config/redis.js"
 import type {IUrl} from "../models/Url.js"
 import {isValidUrl} from "../utils/index.js"
 import {create,FindAll,findOne,updateClickStats} from "../repositories/urlRepository.js"
-const ONE_MINUTE_IN_SECONDS =60;
+const SEVEN_DAYS_IN_SECONDS = 7 * 24 * 60 * 60;
 
 const calculateTTL =  (expiresAt:Date):number =>{
     const now = new Date();
     const remainingMs = expiresAt.getTime() - now.getTime();
     const remainingSeconds = Math.floor(remainingMs/1000);
 
-    return Math.min(ONE_MINUTE_IN_SECONDS,Math.max(0,remainingSeconds))
+    return Math.min(SEVEN_DAYS_IN_SECONDS, Math.max(0, remainingSeconds))
 }
 
 
@@ -21,7 +21,7 @@ export const getUrlByShortenUrlKey = async (
 ): Promise<string | null> =>{
     const cachedOriginalUrl = await get(shortenUrlKey);
     if(cachedOriginalUrl){
-        await ExtendTTL(shortenUrlKey,ONE_MINUTE_IN_SECONDS)
+        await ExtendTTL(shortenUrlKey,SEVEN_DAYS_IN_SECONDS)
         return cachedOriginalUrl;
     }
 // If not in cache, retrieve from database
@@ -31,7 +31,7 @@ await set(
     savedUrl.shortenUrlKey,
     savedUrl.originalUrl,
     RedisExpirationMode.EX,
-    ONE_MINUTE_IN_SECONDS
+    SEVEN_DAYS_IN_SECONDS
 )
 return savedUrl.originalUrl
 }
@@ -96,7 +96,7 @@ export const createdShortnedUrl = async (
 
         const cachedOriginUrl   = await get (shortenUrlKey)
         if(cachedOriginUrl){
-            await ExtendTTL(shortenUrlKey,ONE_MINUTE_IN_SECONDS)
+            await ExtendTTL(shortenUrlKey,SEVEN_DAYS_IN_SECONDS)
             updateClickStats(shortenUrlKey);
             return { url :cachedOriginUrl,expired:false}
         }
